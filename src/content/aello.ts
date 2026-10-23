@@ -2,7 +2,7 @@
 // subcommand's help, the hook table, the TUI key hints and the status line of
 // Compiled from aello's help, hooks, skills and status line; `version` is the released one. Update here, not in the pages.
 
-export const version = "0.3.18";
+export const version = "0.3.20";
 
 export const site = {
   name: "aello",
@@ -61,7 +61,7 @@ export const groups: FeatureGroup[] = [
       },
       {
         title: "Persona",
-        body: "Written once and never overwritten. The bundled coder persona asks for minimal correct changes, a reproduction before a fix and no skipped checks. aello persona replaces it and marks the blueprint custom.",
+        body: "Written once and never overwritten. The bundled coder persona asks for minimal correct changes, a reproduction before a fix and no skipped checks. aello persona <name> shows which generation an env has; --from replaces it and marks the blueprint custom.",
       },
       {
         title: "Seeded memory",
@@ -107,11 +107,12 @@ export const groups: FeatureGroup[] = [
       },
       {
         title: "Mirror",
-        body: "claude-internal/<name>/ holds skills (pruned), memory and commands (merged, so another desk's notes survive), persona, handoff note and blueprint.toml. A fresh clone seeds the env from it; aello pull pulls, creates the blueprints the mirrors describe and places them; aello restore adopts a pulled mirror into an existing env.",
+        body: "claude-internal/<name>/ holds skills (pruned), memory and commands (merged, so another desk's notes survive), persona, handoff note and blueprint.toml. A fresh clone seeds the env from it; aello pull pulls, creates the blueprints the mirrors describe and places them; aello restore adopts a pulled mirror into an existing env and takes the mirror's name casing.",
       },
       {
         title: "Notes between envs",
-        body: "aello note <Env> appends to each target's inbox at that env's project root, resolving names case-insensitively through the placement registry or a home search, never overwriting. --take moves the inbox aside for /note-read. Every delivery is logged for the status line.",
+        body: "aello note <Env> appends to each target's inbox at that env's project root, resolving names case-insensitively through the placement registry or a home search, never overwriting. aello note <Env>@<machine> sends it along the route config.toml names for that machine (a command such as ssh, the note on its stdin), signed <env>@<this machine>; every env's /note skill lists the machines it can reach. --take moves the inbox aside for /note-read. Every delivery is logged for the status line.",
+        since: "0.3.19",
       },
       {
         title: "Handoff",
@@ -147,6 +148,16 @@ export const commands: Command[] = [
     usage: "aello remove <name> [--yes] [--purge]",
   },
   {
+    name: "archive",
+    summary: "Retire a blueprint: its env, notes and transcripts move to ~/archive/aello-envs/<name>/ with a copy of the mirror. No name lists the archive.",
+    usage: "aello archive [name] [--project DIR] [--yes]",
+  },
+  {
+    name: "unarchive",
+    summary: "Bring an archived env back: the blueprint, env dir, notes and transcripts.",
+    usage: "aello unarchive <name> [--project DIR]",
+  },
+  {
     name: "run",
     summary: "Place a blueprint in the current directory and launch Claude.",
     usage: "aello run [name] [--resume [id]] [-p PROMPT] [-- <claude args>]",
@@ -168,8 +179,8 @@ export const commands: Command[] = [
   },
   {
     name: "note",
-    summary: "Leave a note from stdin in other envs' inboxes, or take this env's inbox.",
-    usage: "aello note <Env>... [--from NAME] [--project DIR]   |   aello note --take",
+    summary: "Leave a note from stdin in other envs' inboxes, on this machine or another, or take this env's inbox.",
+    usage: "aello note <Env>[@machine]... [--from NAME] [--project DIR]   |   aello note --take",
   },
   {
     name: "mirror",
@@ -188,8 +199,8 @@ export const commands: Command[] = [
   },
   {
     name: "persona",
-    summary: "Replace a placed env's persona; the blueprint becomes custom.",
-    usage: "aello persona <name> --from FILE [--project DIR]",
+    summary: "Show a placed env's persona generation, or replace the persona with --from; the blueprint becomes custom.",
+    usage: "aello persona <name> [--from FILE] [--project DIR]",
   },
   {
     name: "docs",
@@ -400,7 +411,7 @@ export const envSettings: string[] = [
 
 // The commands page prints `commands` in source order under these group labels.
 export const commandGroups: { label: string; commands: string[] }[] = [
-  { label: "blueprints", commands: ["add", "list", "edit", "remove"] },
+  { label: "blueprints", commands: ["add", "list", "edit", "remove", "archive", "unarchive"] },
   { label: "run", commands: ["run"] },
   { label: "login and plan", commands: ["init", "login", "plan"] },
   { label: "across envs and desks", commands: ["note", "mirror", "pull", "restore", "persona"] },
