@@ -1,7 +1,6 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { Button } from "@/components/ui/button";
 
 // The inline script in layout.tsx sets the .dark class before paint; this
 // button flips it and remembers the choice per browser. The class on <html>
@@ -29,8 +28,13 @@ export function ThemeToggle() {
   }
 
   return (
-    <Button variant="outline" size="sm" onClick={toggle} aria-label="Toggle dark mode">
-      {dark === null ? "Theme" : dark ? "Light" : "Dark"}
-    </Button>
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label="Toggle dark mode"
+      className="cursor-pointer px-2 hover:underline focus-visible:outline-primary-foreground focus-visible:-outline-offset-2"
+    >
+      {dark === null ? "theme" : dark ? "light" : "dark"}
+    </button>
   );
 }

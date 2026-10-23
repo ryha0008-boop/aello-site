@@ -35,5 +35,7 @@ The repo is public and the pre-push hook in `.githooks/` refuses a push whose
 tree holds a private IP, an email address, a home path with a username, a
 credential or a key: keep machine details in `deploy/local.env`.
 
-The look is shadcn's default until the tailored design from design-thief
-lands; apply that as CSS variables in `src/app/globals.css`.
+The look is a terminal, from design-thief: IBM Plex Sans and Mono, square
+corners, a tmux status bar as the nav, the commands page as a man page, and
+rows that print in with opacity only. Colours are CSS variables in
+`src/app/globals.css`; no icons or glyphs anywhere.

@@ -397,3 +397,24 @@ export const envSettings: string[] = [
   "CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS = 100000",
   "AELLO_CONTEXTDB for the session archive",
 ];
+
+// The commands page prints `commands` in source order under these group labels.
+export const commandGroups: { label: string; commands: string[] }[] = [
+  { label: "blueprints", commands: ["add", "list", "edit", "remove"] },
+  { label: "run", commands: ["run"] },
+  { label: "login and plan", commands: ["init", "login", "plan"] },
+  { label: "across envs and desks", commands: ["note", "mirror", "pull", "restore", "persona"] },
+  { label: "aello itself", commands: ["docs", "update", "completions", "statusline"] },
+];
+
+// The inside page lists an env dir as `ls` output, with a note beside each entry.
+export const envDir: { path: string; note?: string }[] = [
+  { path: ".claude-env-coder/" },
+  { path: "  settings.json", note: "reconciled; your keys are kept" },
+  { path: "  CLAUDE.md", note: "the persona, written once" },
+  { path: "  hooks/", note: `${hooks.length} hooks` },
+  { path: "  skills/", note: skills.map((s) => s.name.split(" ")[0].slice(1)).join("  ") },
+  { path: "  projects/<project>/memory/", note: "seeded once, then the env's own" },
+  { path: "  inbox/", note: "notes moved aside by /note-read" },
+  { path: "claude-internal/coder/", note: "the tracked mirror /sync writes" },
+];

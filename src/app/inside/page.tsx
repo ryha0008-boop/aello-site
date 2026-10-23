@@ -1,112 +1,117 @@
 import type { Metadata } from "next";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code } from "@/components/code";
-import { Reveal } from "@/components/reveal";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { envSettings, hooks, skills, statusLine } from "@/content/aello";
+import { PageHead, Pane, Rows, SecHead, Since, Status, StatusLineOne, StatusLineTwo } from "@/components/term";
+import { envDir, envSettings, groups, hooks, skills, statusLine } from "@/content/aello";
 
 export const metadata: Metadata = { title: "Inside an env" };
+
+const states = [
+  { label: "under 70%", line: {} },
+  { label: "from 70%", line: { ctx: 74 } },
+  { label: "from 90%", line: { ctx: 74, h5: 93, cold: true } },
+];
 
 export default function InsidePage() {
   return (
     <>
-      <section className="py-12">
-        <Reveal>
-          <h1 className="text-3xl font-semibold tracking-tight">Inside an env</h1>
-          <p className="mt-2 max-w-2xl text-muted-foreground">
-            What aello run writes into .claude-env-&lt;name&gt;/ and sets for the launched Claude.
-            Hooks and skills are rewritten on every run; persona and memory are never clobbered.
-          </p>
-        </Reveal>
+      <PageHead eyebrow="ls -a .claude-env-coder" title="Inside an env">
+        <p className="m-0 max-w-[68ch] text-lead md:text-[1.25rem]">{groups.find((g) => g.slug === "env")?.lead}</p>
+      </PageHead>
+
+      <section>
+        <SecHead title="The env dir" />
+        <Pane title="~/project">
+          <div className="font-mono text-sm/6">
+            {envDir.map((e) => (
+              <div key={e.path} className="grid gap-x-6 sm:grid-cols-[28ch_minmax(0,1fr)]">
+                <span className="whitespace-pre">{e.path}</span>
+                <span className="text-[13px] text-muted-foreground max-sm:mb-1.5 max-sm:pl-[2ch]">{e.note}</span>
+              </div>
+            ))}
+          </div>
+        </Pane>
       </section>
 
-      <section className="pb-12">
-        <Reveal>
-          <h2 className="text-2xl font-semibold tracking-tight">Seven hooks</h2>
-        </Reveal>
-        <Reveal className="mt-6">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Event</TableHead>
-                <TableHead className="hidden sm:table-cell">Script</TableHead>
-                <TableHead>What it does</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {hooks.map((h) => (
-                <TableRow key={h.script}>
-                  <TableCell className="align-top">
-                    <div className="font-medium">{h.event}</div>
-                    {h.matcher ? (
-                      <div className="font-mono text-xs text-muted-foreground">{h.matcher}</div>
-                    ) : null}
-                  </TableCell>
-                  <TableCell className="hidden align-top font-mono text-xs sm:table-cell">
-                    {h.script}
-                  </TableCell>
-                  <TableCell className="whitespace-normal align-top text-muted-foreground">
-                    {h.does}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Reveal>
+      <section className="mt-16">
+        <SecHead title="What every launch sets" note="settings.json and the environment" />
+        <Pane title="settings.json">
+          <ul className="m-0 list-none p-0 font-mono text-[13px]/[22px]">
+            {envSettings.map((s) => (
+              <li key={s}>{s}</li>
+            ))}
+          </ul>
+        </Pane>
       </section>
 
-      <section className="pb-12">
-        <Reveal>
-          <h2 className="text-2xl font-semibold tracking-tight">Four skills</h2>
-        </Reveal>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {skills.map((s, i) => (
-            <Reveal key={s.name} delay={i * 0.05}>
-              <Card className="h-full">
-                <CardHeader>
-                  <CardTitle className="font-mono">{s.name}</CardTitle>
-                  <CardDescription>Run by {s.who}.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3 text-sm text-muted-foreground">
-                  <p>{s.does}</p>
-                  <Badge variant="secondary">{s.model}</Badge>
-                </CardContent>
-              </Card>
-            </Reveal>
+      <section className="mt-16">
+        <SecHead title="Seven hooks, in the order a session meets them" />
+        <Rows
+          rows={hooks.map((h) => ({
+            key: h.script,
+            name: (
+              <>
+                <span className="block">{h.event}</span>
+                {h.matcher ? (
+                  <span className="block text-xs/[18px] font-normal text-muted-foreground wrap-anywhere">
+                    {h.matcher.replace(/\|/g, " | ")}
+                  </span>
+                ) : null}
+              </>
+            ),
+            text: (
+              <>
+                <span className="block font-mono text-[13px]/[22px] text-muted-foreground">{h.script}</span>
+                {h.does}
+              </>
+            ),
+          }))}
+        />
+      </section>
+
+      <section className="mt-16">
+        <SecHead title="Four skills" note="an .aello-keep file keeps your own version" />
+        <Rows
+          rows={skills.map((s) => ({
+            key: s.name,
+            name: (
+              <>
+                {s.name}
+                <Since>{s.model}</Since>
+              </>
+            ),
+            text: (
+              <>
+                <span className="text-muted-foreground">run by {s.who}.</span> {s.does}
+              </>
+            ),
+          }))}
+        />
+      </section>
+
+      <section className="mt-16">
+        <SecHead title="The status line" note="two lines under the prompt" />
+        <Pane title="aello3dev" current>
+          <Status big>
+            <StatusLineOne />
+            <StatusLineTwo />
+          </Status>
+        </Pane>
+        <div className="mt-6 grid gap-3">
+          {states.map((s) => (
+            <div key={s.label} className="grid gap-x-6 gap-y-1 md:grid-cols-[14ch_minmax(0,1fr)]">
+              <span className="font-mono text-xs/[18px] text-muted-foreground">{s.label}</span>
+              <Status>
+                <StatusLineOne {...s.line} />
+              </Status>
+            </div>
           ))}
         </div>
-      </section>
-
-      <section className="pb-12">
-        <Reveal>
-          <h2 className="text-2xl font-semibold tracking-tight">Status line</h2>
-          <p className="mt-2 max-w-2xl text-muted-foreground">
-            Two lines under the prompt, rendered by aello statusline from what Claude Code pipes in.
-          </p>
-          <Code className="mt-6">{statusLine.sample.join("\n")}</Code>
-          <ul className="mt-4 max-w-3xl space-y-1 text-sm text-muted-foreground">
-            {statusLine.legend.map((l) => (
-              <li key={l}>{l}</li>
-            ))}
-          </ul>
-        </Reveal>
-      </section>
-
-      <section className="pb-12">
-        <Reveal>
-          <h2 className="text-2xl font-semibold tracking-tight">Settings and environment</h2>
-          <p className="mt-2 max-w-2xl text-muted-foreground">
-            Reconciled into settings.json, or set on the claude process at launch.
-          </p>
-          <ul className="mt-6 grid gap-2 font-mono text-sm sm:grid-cols-2">
-            {envSettings.map((s) => (
-              <li key={s} className="rounded-md border px-3 py-2">
-                {s}
-              </li>
-            ))}
-          </ul>
-        </Reveal>
+        <ul className="mt-6 list-none p-0">
+          {statusLine.legend.map((l) => (
+            <li key={l} className="mb-2 max-w-[68ch]">
+              {l}
+            </li>
+          ))}
+        </ul>
       </section>
     </>
   );
