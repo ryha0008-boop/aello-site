@@ -1,0 +1,15 @@
+# User unit (linger on) that serves the static export. Installed from this
+# template by deploy/deploy-internal.sh with @BIND_ADDR@ and @PORT@ filled in
+# from deploy/local.env.
+[Unit]
+Description=aello feature site, static export served on @BIND_ADDR@:@PORT@
+
+[Service]
+# Bound to one address, so no other interface ever sees the port. Restart
+# covers that address coming up after the unit. out/ is next build's export.
+ExecStart=/usr/bin/python3 -m http.server @PORT@ --bind @BIND_ADDR@ --directory %h/work/aello-site/out
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

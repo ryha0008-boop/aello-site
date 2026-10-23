@@ -1,0 +1,72 @@
+#!/bin/sh
+# aello-pre-push v1 — a public repo gets nothing that describes the owner's machines.
+#
+# The pre-commit hook beside this one is narrow on purpose: key material and
+# nothing else, because a private repo is full of addresses and paths that are
+# nobody's business, and blocking them there only teaches --no-verify. A
+# PUBLIC repo is different: a push is mirrored and indexed within minutes and
+# cannot be taken back. So before every push this hook asks GitHub whether the
+# target is public and, if it is, scans the WHOLE tree being pushed (not the
+# diff: an old file is as public as a new one) for
+#
+#   - private IPv4 addresses (10/8, 172.16/12, 192.168/16, 169.254/16)
+#   - email addresses
+#   - home paths that carry a username (/home/<u>, /Users/<u>, C:\Users\<u>)
+#   - password / secret / token assignments with a real-looking value
+#   - the key material the pre-commit hook blocks
+#
+# It cannot judge a hostname or a project name, so it does not try: that is
+# what /sync's sensitive-content read is for.
+#
+# Visibility comes from `gh repo view <url> --json visibility`. Without `gh`,
+# or when it cannot answer, the hook says so once and lets the push through: a
+# guard that blocks every push the day the network is down gets disabled.
+#
+# If this blocks you, fix the file (a placeholder, an env var, a gitignored
+# local file) and push again. Never --no-verify.
+
+remote_url=$2
+[ -z "$remote_url" ] && exit 0
+
+vis=$(gh repo view "$remote_url" --json visibility -q .visibility 2>/dev/null)
+case "$vis" in
+    PUBLIC) ;;
+    PRIVATE|INTERNAL) exit 0 ;;
+    *) echo "aello pre-push: cannot tell whether $remote_url is public (gh missing or offline); tree not scanned" >&2
+       exit 0 ;;
+esac
+
+ip='(^|[^0-9.])(10\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}|172\.(1[6-9]|2[0-9]|3[01])\.[0-9]{1,3}\.[0-9]{1,3}|192\.168\.[0-9]{1,3}\.[0-9]{1,3}|169\.254\.[0-9]{1,3}\.[0-9]{1,3})([^0-9.]|$)'
+mail='[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+home='(/home/|/Users/|[A-Za-z]:\\+Users\\+)[A-Za-z0-9._-]+'
+cred='(password|passwd|secret|api[_-]?key|token)[ "'"'"']*[:=][ "'"'"']*[^ "'"'"'<>$]{6,}'
+keys='^-----BEGIN [A-Z ]*PRIVATE KEY-----|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{36,}|AIza[0-9A-Za-z_-]{35}|sk_live_[0-9A-Za-z]{20,}|xox[baprs]-[0-9A-Za-z]{8,}-[0-9A-Za-z]{8,}|sk-ant-[a-z0-9-]{20,}|sk-or-v1-[0-9a-f]{32,}'
+rx="$ip|$mail|$home|$cred|$keys"
+# Placeholders and the generic names docs use.
+allow='example|placeholder|your[-_ ]|xxx|redacted|dummy|changeme|\.\.\.|/home/(runner|user)|noreply|sample|<[a-z]'
+
+zero=0000000000000000000000000000000000000000
+hits=''
+while read -r _local_ref local_sha _remote_ref _remote_sha; do
+    [ "$local_sha" = "$zero" ] && continue   # a branch delete
+    found=$(git grep -nIE -e "$rx" "$local_sha" -- . \
+        ':(exclude).githooks' ':(exclude)package-lock.json' ':(exclude)*.lock' 2>/dev/null \
+        | sed "s/^$local_sha://" | grep -Eiv "$allow" | head -40)
+    [ -n "$found" ] && hits="$hits$found
+"
+done
+
+[ -z "$hits" ] && exit 0
+cat >&2 <<EOF
+
+  BLOCKED: $remote_url is PUBLIC and the tree being pushed holds
+
+$(printf '%s' "$hits" | sort -u | sed 's/^/    /')
+
+  A public repo gets no private IPs, email addresses, home paths, passwords or
+  keys. Fix the source (a placeholder, an env var, a gitignored local file)
+  and push again. Never --no-verify: aello replaces this hook on the next
+  placement, so a pattern fix belongs in aello's templates/scaffold/pre-push.
+
+EOF
+exit 1
