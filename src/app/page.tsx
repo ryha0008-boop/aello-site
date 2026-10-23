@@ -56,12 +56,12 @@ export default function Home() {
             </div>
             <div className="flex flex-wrap gap-x-1 bg-primary px-1 text-xs/[22px] text-primary-foreground">
               <span className="bg-primary-foreground px-1.5 text-primary">0:aello-site</span>
-              <span className="px-1.5">1:design-thief</span>
-              <span className="bg-warning px-1.5 text-warning-foreground">2:vps-infra</span>
+              <span className="px-1.5">1:web</span>
+              <span className="bg-warning px-1.5 text-warning-foreground">2:api</span>
             </div>
           </div>
           <p className="mt-2.5 max-w-[68ch] text-sm text-muted-foreground">
-            Two envs in one repo, each with its own config, its own status line and its own commits. The vps-infra
+            Two envs in one repo, each with its own config, its own status line and its own commits. The api
             window rang the bell: a pane there waits for you.
           </p>
         </div>
