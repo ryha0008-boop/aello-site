@@ -2,7 +2,7 @@
 // subcommand's help, the hook table, the TUI key hints and the status line of
 // Compiled from aello's help, hooks, skills and status line; `version` is the released one. Update here, not in the pages.
 
-export const version = "0.3.20";
+export const version = "0.3.21";
 
 export const site = {
   name: "aello",
@@ -42,7 +42,7 @@ export const groups: FeatureGroup[] = [
       },
       {
         title: "Shared login",
-        body: "aello init logs in, asks the plan and creates a first blueprint, re-asking a bad answer instead of failing at the end. aello login runs claude setup-token and stores the token owner-only. aello plan tells the status line which limits to show.",
+        body: "aello init logs in, asks the plan and creates a first blueprint, re-asking a bad answer instead of failing at the end. aello login runs claude setup-token and stores the token owner-only. aello plan tells the status line which limits to show. aello config shows config.toml with the token hidden and sets a key, so no session has to open the file.",
       },
       {
         title: "Compatible with 0.2",
@@ -69,7 +69,7 @@ export const groups: FeatureGroup[] = [
       },
       {
         title: "Seven hooks",
-        body: "Session start, per-prompt response rules, plan mode denied, a guard on dangerous git commands and hand edits, a handoff checker, a tmux bell when a pane waits for you, and a session-end archive to contextdb.",
+        body: "Session start, per-prompt response rules, plan mode denied, a guard on dangerous git commands, hand edits and reads of aello's config.toml, a handoff checker, a tmux bell when a pane waits for you, and a session-end archive to contextdb.",
       },
       {
         title: "Four skills",
@@ -111,7 +111,7 @@ export const groups: FeatureGroup[] = [
       },
       {
         title: "Notes between envs",
-        body: "aello note <Env> appends to each target's inbox at that env's project root, resolving names case-insensitively through the placement registry or a home search, never overwriting. aello note <Env>@<machine> sends it along the route config.toml names for that machine (a command such as ssh, the note on its stdin), signed <env>@<this machine>; every env's /note skill lists the machines it can reach. --take moves the inbox aside for /note-read. Every delivery is logged for the status line.",
+        body: "aello note <Env> appends to each target's inbox at that env's project root, resolving names case-insensitively through the placement registry or a home search, never overwriting. aello note <Env>@<machine> sends it along the route config.toml names for that machine (set with aello config machines.<m>.note) (a command such as ssh, the note on its stdin), signed <env>@<this machine>; every env's /note skill lists the machines it can reach. --take moves the inbox aside for /note-read. Every delivery is logged for the status line.",
         since: "0.3.19",
       },
       {
@@ -176,6 +176,11 @@ export const commands: Command[] = [
     name: "plan",
     summary: "Show or set the plan behind the login.",
     usage: "aello plan [pro|max-5x|max-20x|team|enterprise|unknown]",
+  },
+  {
+    name: "config",
+    summary: "Show config.toml with the token hidden, or get, set or unset one dotted key such as machine or machines.<m>.note. The token changes only through aello login.",
+    usage: "aello config [KEY [VALUE] | --unset KEY]",
   },
   {
     name: "note",
@@ -330,9 +335,9 @@ export const hooks: Hook[] = [
   },
   {
     event: "PreToolUse",
-    matcher: "Bash|Write|Edit",
+    matcher: "Bash|PowerShell|Write|Edit|Read|Grep",
     script: "guard.py",
-    does: "Refuses git add -A, commit -a, --no-verify, force-push, rebase --continue, and hand edits of an inbox or the env dir, with a reason the model can act on.",
+    does: "Refuses git add -A, commit -a, --no-verify, force-push, rebase --continue, hand edits of an inbox or the env dir, and any read or edit of aello's config.toml, which holds the token, with a reason the model can act on.",
   },
   {
     event: "PostToolUse",
@@ -413,7 +418,7 @@ export const envSettings: string[] = [
 export const commandGroups: { label: string; commands: string[] }[] = [
   { label: "blueprints", commands: ["add", "list", "edit", "remove", "archive", "unarchive"] },
   { label: "run", commands: ["run"] },
-  { label: "login and plan", commands: ["init", "login", "plan"] },
+  { label: "login and config", commands: ["init", "login", "plan", "config"] },
   { label: "across envs and desks", commands: ["note", "mirror", "pull", "restore", "persona"] },
   { label: "aello itself", commands: ["docs", "update", "completions", "statusline"] },
 ];
