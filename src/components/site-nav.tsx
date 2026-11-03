@@ -47,7 +47,7 @@ export function SiteNav() {
 export function SiteFooter() {
   return (
     <footer className="border-t">
-      <div className="mx-auto max-w-site px-4 pt-5 pb-7 text-sm text-muted-foreground md:px-8">
+      <div className="mx-auto max-w-site px-4 pt-5 pb-7 text-sm/[1.6] text-muted-foreground md:px-8">
         aello {version}. Content compiled from the
         binary&apos;s own help, hooks, skills and status line.
       </div>

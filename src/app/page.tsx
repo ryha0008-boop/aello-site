@@ -60,7 +60,7 @@ export default function Home() {
               <span className="bg-warning px-1.5 text-warning-foreground">2:api</span>
             </div>
           </div>
-          <p className="mt-2.5 max-w-[68ch] text-sm text-muted-foreground">
+          <p className="mt-2.5 max-w-[68ch] text-sm/[1.6] text-muted-foreground">
             Two envs in one repo, each with its own config, its own status line and its own commits. The api
             window rang the bell: a pane there waits for you.
           </p>
@@ -71,7 +71,7 @@ export default function Home() {
         {groups.map((g) => (
           <section key={g.slug} id={g.slug}>
             <SecHead title={g.title} note={`${g.features.length} features`} big />
-            <p className="-mt-1 mb-6 max-w-[68ch] text-muted-foreground">{g.lead}</p>
+            <p className="mb-6 max-w-[68ch] text-muted-foreground">{g.lead}</p>
             <Rows
               rows={g.features.map((f) => ({
                 key: f.title,

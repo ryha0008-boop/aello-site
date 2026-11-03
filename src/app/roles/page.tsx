@@ -12,7 +12,7 @@ export default function RolesPage() {
   return (
     <>
       <PageHead eyebrow="aello add <name> --role maintainer|contributor|local|standalone" title="Four roles">
-        <p className="mb-4 max-w-[68ch] text-lead md:text-[1.25rem]">{intro}</p>
+        <p className="mb-[1em] max-w-[68ch] text-lead md:text-[1.25rem]">{intro}</p>
         <p className="m-0 max-w-[68ch] text-muted-foreground">
           A role decides what an env writes into the repo, what /sync does, and whether anything leaves the machine.
         </p>
