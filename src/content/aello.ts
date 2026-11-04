@@ -2,7 +2,7 @@
 // subcommand's help, the hook table, the TUI key hints and the status line of
 // Compiled from aello's help, hooks, skills and status line; `version` is the released one. Update here, not in the pages.
 
-export const version = "0.3.21";
+export const version = "0.3.22";
 
 export const site = {
   name: "aello",
@@ -337,7 +337,7 @@ export const hooks: Hook[] = [
     event: "PreToolUse",
     matcher: "Bash|PowerShell|Write|Edit|Read|Grep",
     script: "guard.py",
-    does: "Refuses git add -A, commit -a, --no-verify, force-push, rebase --continue, hand edits of an inbox or the env dir, and any read or edit of aello's config.toml, which holds the token, with a reason the model can act on.",
+    does: "Refuses git add -A, commit -a, --no-verify, force-push, rebase --continue, hand edits of an inbox or the env dir, and any read or edit of aello's config.toml, which holds the token, with a reason the model can act on. The text of a note sent with aello note is not checked: it is never run.",
   },
   {
     event: "PostToolUse",
