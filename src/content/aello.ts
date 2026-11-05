@@ -2,7 +2,7 @@
 // subcommand's help, the hook table, the TUI key hints and the status line of
 // Compiled from aello's help, hooks, skills and status line; `version` is the released one. Update here, not in the pages.
 
-export const version = "0.3.24";
+export const version = "0.3.25";
 
 export const site = {
   name: "aello",
@@ -65,7 +65,7 @@ export const groups: FeatureGroup[] = [
       },
       {
         title: "Seeded memory",
-        body: "A working-style note and a review-style note, only when the env has no memory yet.",
+        body: "A working-style note and a review-style note, only when the env has no memory yet. A working-style note the env never edited is brought up to date when the seed changes.",
       },
       {
         title: "Seven hooks",
@@ -319,13 +319,13 @@ export const hooks: Hook[] = [
     event: "SessionStart",
     matcher: "",
     script: "session-start.py",
-    does: "Tells the session it runs under aello, delivers the handoff note on a fresh start and consumes the file, and, when notes wait in the inbox, has the session read and handle them in its first reply.",
+    does: "Tells the session it runs under aello, delivers the handoff note on a fresh start and consumes the file, and, when notes wait in the inbox, has the session read and finish them in its first reply.",
   },
   {
     event: "UserPromptSubmit",
     matcher: "",
     script: "user-prompt-submit.py",
-    does: "Injects the response rules on every prompt: lead with the answer, no plans, a small reversible fix is made rather than proposed, a TL;DR block with numbered steps. A note that arrived since the last prompt is read and handled in the same reply.",
+    does: "Injects the response rules on every prompt: lead with the answer, no plans, no go-aheads (bypassed permissions are the authorization: fixes, pushes, releases, deploys and notes are done and reported, never offered as a yes/no step), a TL;DR block with numbered steps. A note that arrived since the last prompt is read and handled in the same reply.",
   },
   {
     event: "PreToolUse",
