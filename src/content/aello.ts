@@ -2,7 +2,7 @@
 // subcommand's help, the hook table, the TUI key hints and the status line of
 // Compiled from aello's help, hooks, skills and status line; `version` is the released one. Update here, not in the pages.
 
-export const version = "0.3.25";
+export const version = "0.3.26";
 
 export const site = {
   name: "aello",
