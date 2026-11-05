@@ -2,7 +2,7 @@
 // subcommand's help, the hook table, the TUI key hints and the status line of
 // Compiled from aello's help, hooks, skills and status line; `version` is the released one. Update here, not in the pages.
 
-export const version = "0.3.22";
+export const version = "0.3.24";
 
 export const site = {
   name: "aello",
@@ -319,13 +319,13 @@ export const hooks: Hook[] = [
     event: "SessionStart",
     matcher: "",
     script: "session-start.py",
-    does: "Tells the session it runs under aello, delivers the handoff note on a fresh start and consumes the file, and lists unread notes without touching them.",
+    does: "Tells the session it runs under aello, delivers the handoff note on a fresh start and consumes the file, and, when notes wait in the inbox, has the session read and handle them in its first reply.",
   },
   {
     event: "UserPromptSubmit",
     matcher: "",
     script: "user-prompt-submit.py",
-    does: "Injects the response rules on every prompt: lead with the answer, no plans, a small reversible fix is made rather than proposed, a TL;DR block with numbered steps.",
+    does: "Injects the response rules on every prompt: lead with the answer, no plans, a small reversible fix is made rather than proposed, a TL;DR block with numbered steps. A note that arrived since the last prompt is read and handled in the same reply.",
   },
   {
     event: "PreToolUse",
