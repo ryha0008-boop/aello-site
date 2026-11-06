@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Code } from "@/components/code";
 import { CopyButton } from "@/components/copy-button";
-import { Eyebrow, Rows, SecHead, Since, Status, StatusLineOne, StatusLineTwo } from "@/components/term";
+import { Eyebrow, Rows, SecHead, Since, Status, StatusLineOne } from "@/components/term";
 import { commands, groups, roles, site } from "@/content/aello";
 
 const link = "underline decoration-1 underline-offset-3";
@@ -47,11 +47,9 @@ export default function Home() {
             <div className="grid sm:grid-cols-2">
               <TmuxPane name="coder" active command="aello run coder">
                 <StatusLineOne />
-                <StatusLineTwo me="coder" parts={["<- aello3dev note"]} />
               </TmuxPane>
               <TmuxPane name="aello3dev" command="aello note SysAdmin < note.md">
                 <StatusLineOne model="Fable 5.1" ctx={74} />
-                <StatusLineTwo />
               </TmuxPane>
             </div>
             <div className="flex flex-wrap gap-x-1 bg-primary px-1 text-xs/[22px] text-primary-foreground">

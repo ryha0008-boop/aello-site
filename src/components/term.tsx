@@ -66,7 +66,7 @@ export function Since({ children }: { children: ReactNode }) {
 // The status line, one span per segment so a narrow pane wraps between
 // segments, never inside one. Built from aello's own sample; a state only
 // swaps the numbers, and the tint follows aello's: amber from 70, red from 90.
-const [sampleOne, sampleTwo] = statusLine.sample;
+const [sampleOne] = statusLine.sample;
 
 function tint(seg: string) {
   const pct = Number(/(\d+)%/.exec(seg)?.[1] ?? 0);
@@ -98,14 +98,6 @@ export function StatusLineOne({ model, ctx, h5, cold = false }: LineOne) {
     return s;
   });
   return <StatusRow segs={cold ? [...segs, "cache cold"] : segs} />;
-}
-
-// Line two: the env's name, then what it sent, then what it received.
-const [, sampleMe, sampleSent, sampleGot] = /^(\S+) (.*?)\s{2,}(.*)$/.exec(sampleTwo) ?? ["", sampleTwo, "", ""];
-
-// A part's own " · " becomes a segment of its own, so a narrow pane wraps there.
-export function StatusLineTwo({ me = sampleMe, parts = [sampleSent, `  ${sampleGot}`] }: { me?: string; parts?: string[] }) {
-  return <StatusRow segs={[me, ...parts.flatMap((p) => p.split(" · ").flatMap((s, i) => (i ? ["·", s] : [s])))]} sep={false} />;
 }
 
 export function Status({ big = false, children }: { big?: boolean; children: ReactNode }) {

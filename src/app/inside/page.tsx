@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHead, Pane, Rows, SecHead, Since, Status, StatusLineOne, StatusLineTwo } from "@/components/term";
+import { PageHead, Pane, Rows, SecHead, Since, Status, StatusLineOne } from "@/components/term";
 import { envDir, envSettings, groups, hooks, skills, statusLine } from "@/content/aello";
 
 export const metadata: Metadata = { title: "Inside an env" };
@@ -88,11 +88,10 @@ export default function InsidePage() {
       </section>
 
       <section className="mt-16">
-        <SecHead title="The status line" note="two lines under the prompt" />
+        <SecHead title="The status line" note="one line under the prompt" />
         <Pane title="aello3dev" current>
           <Status big>
             <StatusLineOne />
-            <StatusLineTwo />
           </Status>
         </Pane>
         <div className="mt-6 grid gap-3">

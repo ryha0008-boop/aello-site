@@ -2,7 +2,7 @@
 // subcommand's help, the hook table, the TUI key hints and the status line of
 // Compiled from aello's help, hooks, skills and status line; `version` is the released one. Update here, not in the pages.
 
-export const version = "0.3.26";
+export const version = "0.3.27";
 
 export const site = {
   name: "aello",
@@ -42,7 +42,7 @@ export const groups: FeatureGroup[] = [
       },
       {
         title: "Shared login",
-        body: "aello init logs in, asks the plan and creates a first blueprint, re-asking a bad answer instead of failing at the end. aello login runs claude setup-token and stores the token owner-only. aello plan tells the status line which limits to show. aello config shows config.toml with the token hidden and sets a key, so no session has to open the file.",
+        body: "aello init logs in, asks the plan and creates a first blueprint, re-asking a bad answer instead of failing at the end. aello login runs claude setup-token and stores the token owner-only. aello plan tells Claude Code which plan the token is on (pro, max, ultra, team or enterprise). aello config shows config.toml with the token hidden and sets a key, so no session has to open the file.",
       },
       {
         title: "Compatible with 0.2",
@@ -82,7 +82,7 @@ export const groups: FeatureGroup[] = [
       },
       {
         title: "Status line",
-        body: "Model, effort, context percent, 5-hour and 7-day plan limits with reset times, amber at 70 and red at 90 percent, a cache-cold warning, and a notes row with sent, received, waiting and read notes plus handoff waiting.",
+        body: "Model, effort, context percent, the plan limits with reset times (7-day, and 5-hour where the plan has one; verified Ultra does not), amber at 70 and red at 90 percent, and a cache-cold warning.",
       },
     ],
   },
@@ -175,7 +175,7 @@ export const commands: Command[] = [
   {
     name: "plan",
     summary: "Show or set the plan behind the login.",
-    usage: "aello plan [pro|max-5x|max-20x|team|enterprise|unknown]",
+    usage: "aello plan [pro|max|ultra|team|enterprise|unknown]",
   },
   {
     name: "config",
@@ -391,12 +391,10 @@ export const skills: Skill[] = [
 export const statusLine = {
   sample: [
     "Opus 5.5 · high · ctx 16% · 5h 38% (4h12m) · 7d 41% (3d12h)",
-    "aello3dev -> SysAdmin note · TechnicalDirector read   <- TechnicalDirector 2 notes",
   ],
   legend: [
-    "Line one: model, effort, context used, the 5-hour and 7-day plan limits with time to reset. Amber at 70 percent, red at 90.",
+    "Model, effort, context used, the plan limits with time to reset: 7d, and 5h where the plan has one (verified Ultra has none). Amber at 70 percent, red at 90.",
     "cache cold means the next prompt re-sends the whole context at full price.",
-    "Line two: the last 7 days of notes. -> sent, <- received, note or N notes still waiting, read taken by /note-read, handoff waiting when a resume note is written.",
   ],
 };
 
