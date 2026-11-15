@@ -2,7 +2,7 @@
 // subcommand's help, the hook table, the TUI key hints and the status line of
 // Compiled from aello's help, hooks, skills and status line; `version` is the released one. Update here, not in the pages.
 
-export const version = "0.3.29";
+export const version = "0.3.30";
 
 export const site = {
   name: "aello",
@@ -38,7 +38,7 @@ export const groups: FeatureGroup[] = [
       },
       {
         title: "TUI",
-        body: "aello with no arguments: enter runs, r resumes from a session picker, a adds, e edits, d deletes, F toggles all blueprints or the ones placed here, p pulls, L logs in, u updates and restarts into the new version, ? shows the docs.",
+        body: "aello with no arguments: enter runs, r resumes from a session picker, a adds, e edits, d deletes, A archives after a y, F toggles all blueprints or the ones placed here, p pulls, L logs in, u updates and restarts into the new version, ? shows the docs. The header says when a newer release is out.",
       },
       {
         title: "Shared login",
@@ -57,7 +57,7 @@ export const groups: FeatureGroup[] = [
     features: [
       {
         title: "settings.json reconciled",
-        body: "Bypass permissions, the blueprint's model and effort, a 99-day cleanup, the co-author trailer off and the aello status line. Only aello's own hook groups are replaced; retired 0.2 hooks are removed.",
+        body: "Bypass permissions, the blueprint's model and effort, a 5-day cleanup of Claude Code's own transcripts, the co-author trailer off and the aello status line. Only aello's own hook groups are replaced; retired 0.2 hooks are removed.",
       },
       {
         title: "Persona",
@@ -98,7 +98,7 @@ export const groups: FeatureGroup[] = [
       },
       {
         title: "Scaffold",
-        body: "Written only when absent: .gitignore lines, CHANGELOG, README, CLAUDE.md, docs/, VERSION, .gitattributes, the version and CI workflows, renovate config, a pre-commit hook that refuses API keys, OpenRouter keys, private keys and .env files, and a pre-push hook that refuses a push to a public repo while the tree holds private IPs, email addresses, home paths, credentials or keys; both upgraded in place when aello ships a newer one.",
+        body: "Written only when absent: .gitignore lines, CHANGELOG, README, CLAUDE.md, docs/, VERSION, .gitattributes, the version and CI workflows, a renovate config whose weekly minor and patch PR merges itself once CI passes, a pre-commit hook that refuses API keys, OpenRouter keys, private keys and .env files, and a pre-push hook that refuses a push to a public repo while the tree holds private IPs, email addresses, home paths, credentials or keys; both upgraded in place when aello ships a newer one.",
       },
       {
         title: "/sync",
@@ -119,8 +119,13 @@ export const groups: FeatureGroup[] = [
         body: "/handoff writes <name>.HANDOFF.md capped at 400 words. The next fresh session gets it at boot and the file is removed.",
       },
       {
+        title: "Session archive",
+        body: "Every session's transcript is archived to contextdb when it ends. aello search <text> finds what any past session of any env said, newest first, with who said it and the transcript's path; aello prune <days> deletes archived sessions older than that, after showing how much it is.",
+        since: "0.3.30",
+      },
+      {
         title: "Self-maintenance",
-        body: "aello update installs the newest release verified against SHA256SUMS, aello docs prints the bundled guide, reference, skills, troubleshooting and upgrading pages, aello completions covers five shells. Every push to aello's main releases a new version.",
+        body: "aello update installs the newest release verified against SHA256SUMS; aello run and the TUI header say when a newer one is out, asking GitHub at most once a day. aello docs prints the bundled guide, reference, skills, troubleshooting and upgrading pages, aello completions covers five shells. Every push to aello's main releases a new version.",
       },
     ],
   },
@@ -206,6 +211,16 @@ export const commands: Command[] = [
     name: "persona",
     summary: "Show a placed env's persona generation, or replace the persona with --from; the blueprint becomes custom.",
     usage: "aello persona <name> [--from FILE] [--project DIR]",
+  },
+  {
+    name: "search",
+    summary: "Search the archived session transcripts in contextdb for a text, newest session first.",
+    usage: "aello search <text>",
+  },
+  {
+    name: "prune",
+    summary: "Delete archived sessions older than DAYS days from contextdb. Claude Code's own transcripts stay.",
+    usage: "aello prune <days> [--yes]",
   },
   {
     name: "docs",
@@ -401,7 +416,7 @@ export const statusLine = {
 export const envSettings: string[] = [
   "permissions.defaultMode = bypassPermissions",
   "model and effortLevel from the blueprint",
-  "cleanupPeriodDays = 99",
+  "cleanupPeriodDays = 5",
   "includeCoAuthoredBy = false",
   "statusLine runs aello statusline",
   "only aello's own hook groups are replaced; yours are kept",
@@ -418,6 +433,7 @@ export const commandGroups: { label: string; commands: string[] }[] = [
   { label: "run", commands: ["run"] },
   { label: "login and config", commands: ["init", "login", "plan", "config"] },
   { label: "across envs and desks", commands: ["note", "mirror", "pull", "restore", "persona"] },
+  { label: "session archive", commands: ["search", "prune"] },
   { label: "aello itself", commands: ["docs", "update", "completions", "statusline"] },
 ];
 
