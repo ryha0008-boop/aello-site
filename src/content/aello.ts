@@ -2,7 +2,7 @@
 // subcommand's help, the hook table, the TUI key hints and the status line of
 // Compiled from aello's help, hooks, skills and status line; `version` is the released one. Update here, not in the pages.
 
-export const version = "0.3.34";
+export const version = "0.3.35";
 
 export const site = {
   name: "aello",
@@ -38,7 +38,7 @@ export const groups: FeatureGroup[] = [
       },
       {
         title: "TUI",
-        body: "aello with no arguments: enter runs, r resumes from a session picker, a adds, e edits, d deletes, A archives after a y, F toggles all blueprints or the ones placed here, p pulls, L logs in, u updates and restarts into the new version, ? shows the docs. The header says when a newer release is out.",
+        body: "aello with no arguments: enter runs, r resumes from a session picker that shows what you and Claude last said in the highlighted session (pgup and pgdn scroll back through it), a adds, e edits, d deletes, A archives after a y, F toggles all blueprints or the ones placed here, p pulls, L logs in, u updates and restarts into the new version, ? shows the docs. The header says when a newer release is out.",
       },
       {
         title: "Shared login",
